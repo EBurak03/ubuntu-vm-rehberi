@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot name="quadrotor_base" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Sonar sensör xacro'sunu include et -->
+  <xacro:include filename="$(find hector_sensors_description)/urdf/sonar_sensor.urdf.xacro"/>
+
+  <!-- GPS sensör + plugin xacro'sunu include et -->
+  <xacro:include filename="$(find sensor_models)/urdf/gps_with_plugin.xacro"/>
+
+  <!-- Main quadrotor link + sensörler -->
+  <xacro:macro name="quadrotor_base_macro">
+    <link name="base_link">
+      <inertial>
+        <mass value="1.477" />
+        <origin xyz="0 0 0" />
+        <inertia
+          ixx="0.01152"
+          ixy="0.0"
+          ixz="0.0"
+          iyy="0.01152"
+          iyz="0.0"
+          izz="0.01152" />
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://hector_quadrotor_description/meshes/quadrotor/quadrotor_base.dae"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://hector_quadrotor_description/meshes/quadrotor/quadrotor_base.dae"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Sonar height sensor -->
+    <xacro:sonar_sensor name="sonar"
+                        parent="base_link"
+                        ros_topic="sonar_height"
+                        update_rate="20.0"
+                        min_range="0.02"
+                        max_range="5.0"
+                        field_of_view="0.5"
+                        ray_count="5">
+      <origin xyz="-0.16 0.0 -0.012" rpy="0 ${90*pi/180} 0"/>
+    </xacro:sonar_sensor>
+
+    <!-- GPS sensörünü + plugin'i base_link'e monte et -->
+    <xacro:gps_with_plugin parent="base_link" x="0" y="0" z="0.05"/>
+
+  </xacro:macro>
+
+</robot>

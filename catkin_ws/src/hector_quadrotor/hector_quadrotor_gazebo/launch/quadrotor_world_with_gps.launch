@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Gazebo dünyasını yükle -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+
+  <!-- Robotun URDF tanımı -->
+  <param name="robot_description"
+         command="$(find xacro)/xacro '$(find hector_quadrotor_description)/urdf/quadrotor.urdf.xacro'" />
+
+  <!-- Drone’u spawn et -->
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_quadrotor"
+        args="-urdf -model quadrotor -param robot_description"
+        output="screen"/>
+
+</launch>
